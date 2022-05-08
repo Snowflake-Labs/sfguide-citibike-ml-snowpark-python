@@ -1,0 +1,16 @@
+{
+    "AppImageConfigName": "snowpark-config",
+    "KernelGatewayImageConfig": {
+        "KernelSpecs": [
+            {
+                "Name": "conda-env-snowpark-py",
+                "DisplayName": "Python [conda env: snowpark]"
+            }
+        ],
+        "FileSystemConfig": {
+            "MountPath": "/root",
+            "DefaultUid": 0,
+            "DefaultGid": 0
+        }
+    }
+}

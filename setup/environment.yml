@@ -1,0 +1,15 @@
+name: snowpark
+channels:
+  - conda
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+      - '/tmp/snowflake_snowpark_python-0.4.0-py3-none-any.whl[pandas]'
+      - pytorch-tabnet
+      - matplotlib
+      - seaborn
+      - rexmex
+      - awscli
+      - boto3
+      - ipykernel

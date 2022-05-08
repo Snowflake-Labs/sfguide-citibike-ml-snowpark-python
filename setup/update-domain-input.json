@@ -1,0 +1,13 @@
+{
+    "DomainId": "SAGEMAKER_DOMAIN",
+    "DefaultUserSettings": {
+        "KernelGatewayAppSettings": {
+            "CustomImages": [
+                {
+                    "ImageName": "snowpark040",
+                    "AppImageConfigName": "snowpark-config"
+                }
+            ]
+        }
+    }
+}
