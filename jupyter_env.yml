@@ -6,10 +6,10 @@ dependencies:
   - pip
   - pip:
     - './include/snowflake_snowpark_python-0.6.0-py3-none-any.whl[pandas]'
-    - pytorch-tabnet
-    - rexmex
-    - streamlit
-    - matplotlib
-    - statsmodels
-    - seaborn
-    - jupyter
+    - pytorch-tabnet==3.1.1
+    - matplotlib==3.5.2
+    - statsmodels==0.13.2
+    - seaborn==0.11.2
+    - rexmex==0.1.0
+    - jupyter==1.0.0
+    - streamlit==1.8.1

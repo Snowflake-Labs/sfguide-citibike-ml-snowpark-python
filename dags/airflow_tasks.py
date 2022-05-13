@@ -96,15 +96,30 @@ def materialize_holiday_task(state_dict: dict)-> dict:
     return state_dict
 
 @task()
-def materialize_weather_task(state_dict: dict)-> dict:
+def subscribe_to_weather_data_task(state_dict: dict)-> dict:
     from dags.snowpark_connection import snowpark_connect
-    from dags.mlops_pipeline import materialize_weather_table
+    from dags.mlops_pipeline import subscribe_to_weather_data
 
-    print('Materializing weather table')
+    print('Subscribing to weather data')
     session, _ = snowpark_connect()
 
-    _ = materialize_weather_table(session=session,
-                                  weather_table_name=state_dict['weather_table_name'])
+    _ = subscribe_to_weather_data(session=session, 
+                                  weather_database_name=state_dict['weather_database_name'], 
+                                  weather_listing_id=state_dict['weather_listing_id'])
+    session.close()
+    return state_dict
+
+@task()
+def create_weather_view_task(state_dict: dict)-> dict:
+    from dags.snowpark_connection import snowpark_connect
+    from dags.mlops_pipeline import create_weather_view
+
+    print('Creating weather view')
+    session, _ = snowpark_connect()
+
+    _ = create_weather_view(session=session,
+                            weather_table_name=state_dict['weather_table_name'],
+                            weather_view_name=state_dict['weather_view_name'])
     session.close()
     return state_dict
 
@@ -162,7 +177,7 @@ def generate_feature_table_task(state_dict:dict,
     _ = create_feature_table(session, 
                              trips_table_name=state_dict['clone_table_name'], 
                              holiday_table_name=state_dict['holiday_table_name'], 
-                             weather_table_name=state_dict['weather_table_name'],
+                             weather_view_name=state_dict['weather_view_name'],
                              feature_table_name=state_dict['feature_table_name'])
 
     _ = session.sql("ALTER TABLE "+state_dict['feature_table_name']+\
@@ -184,7 +199,7 @@ def generate_forecast_table_task(state_dict:dict,
     _ = create_forecast_table(session, 
                               trips_table_name=state_dict['trips_table_name'],
                               holiday_table_name=state_dict['holiday_table_name'], 
-                              weather_table_name=state_dict['weather_table_name'], 
+                              weather_view_name=state_dict['weather_view_name'], 
                               forecast_table_name=state_dict['forecast_table_name'],
                               steps=state_dict['forecast_steps'])
 

@@ -6,7 +6,6 @@ from dags.airflow_tasks import snowpark_database_setup
 from dags.airflow_tasks import incremental_elt_task
 from dags.airflow_tasks import initial_bulk_load_task
 from dags.airflow_tasks import materialize_holiday_task
-from dags.airflow_tasks import materialize_weather_task
 from dags.airflow_tasks import deploy_model_udf_task
 from dags.airflow_tasks import deploy_eval_udf_task
 from dags.airflow_tasks import generate_feature_table_task
@@ -41,12 +40,14 @@ def citibikeml_monthly_taskflow(files_to_download:list, run_date:str):
 
     state_dict.update({'model_id': model_id})
     state_dict.update({'run_date': run_date})
-
+    state_dict.update({'weather_database_name': 'WEATHER'})
     state_dict.update({'load_table_name': 'RAW_',
                        'trips_table_name': 'TRIPS',
                        'load_stage_name': 'LOAD_STAGE',
                        'model_stage_name': 'MODEL_STAGE',
-                       'weather_table_name': 'WEATHER',
+                       'weather_listing_id': 'zy74494.WEATHERSOURCE_SNOWFLAKE_SNOWPARK_TILE_SNOWFLAKE_SECURE_SHARE_1651768630709',
+                       'weather_table_name': state_dict['weather_database_name']+'.ONPOINT_ID.HISTORY_DAY',
+                       'weather_view_name': 'WEATHER',
                        'holiday_table_name': 'HOLIDAYS',
                        'clone_table_name': 'CLONE_'+model_id,
                        'feature_table_name' : 'FEATURE_'+model_id,

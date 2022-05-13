@@ -31,7 +31,7 @@ def deploy_pred_train_udf(session, udf_name:str, function_name:str, model_stage_
 
     session.clear_packages()
     session.clear_imports()
-    dep_packages=["pandas==1.3.5", "pytorch", "scipy", "scikit-learn", "setuptools"]
+    dep_packages=["pandas==1.3.5", "pytorch==1.10.2", "scipy==1.7.1", "scikit-learn==1.0.2", "setuptools==58.0.4"]
     dep_imports=['./include/pytorch_tabnet.zip', 'dags']
 
     station_train_predict_udf = session.udf.register(station_train_predict_func, 
@@ -59,7 +59,7 @@ def deploy_eval_udf(session, udf_name:str, function_name:str, model_stage_name:s
 
     session.clear_packages()
     session.clear_imports()
-    dep_packages=['pandas==1.3.5', 'scikit-learn']
+    dep_packages=['pandas==1.3.5', 'scikit-learn==1.0.2']
     dep_imports=['./include/rexmex.zip', 'dags']
 
     eval_model_output_udf = session.udf.register(eval_model_func, 
@@ -128,10 +128,6 @@ def create_feature_table(session,
         holiday_df = generate_holiday_df(session, holiday_table_name)
         
     weather_df = session.table(weather_view_name)
-    try: 
-        _ = weather_df.columns
-    except:
-        weather_df = generate_weather_df(session, weather_view_name)
     
     sid_date_window = snp.Window.partition_by(F.col('STATION_ID')).order_by(F.col('DATE').asc())
     sid_window = snp.Window.partition_by(F.col('STATION_ID'))
