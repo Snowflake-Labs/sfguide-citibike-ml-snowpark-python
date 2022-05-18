@@ -21,7 +21,6 @@ def incremental_elt_task(state_dict: dict, files_to_download:list)-> dict:
     session, _ = snowpark_connect()
 
     print('Ingesting '+str(files_to_download))
-    download_role_ARN=state_dict['connection_parameters']['download_role_ARN']
     download_base_url=state_dict['connection_parameters']['download_base_url']
 
     _ = session.use_warehouse(state_dict['compute_parameters']['load_warehouse'])
@@ -29,8 +28,8 @@ def incremental_elt_task(state_dict: dict, files_to_download:list)-> dict:
     _ = incremental_elt(session=session, 
                         state_dict=state_dict, 
                         files_to_ingest=files_to_download,
-                        download_role_ARN=download_role_ARN,
-                        download_base_url=download_base_url)
+                        download_base_url=download_base_url,
+                        use_prestaged=True)
 
     #_ = session.sql('ALTER WAREHOUSE IF EXISTS '+state_dict['compute_parameters']['load_warehouse']+\
     #                ' SUSPEND').collect()
@@ -39,36 +38,19 @@ def incremental_elt_task(state_dict: dict, files_to_download:list)-> dict:
     return state_dict
 
 def initial_bulk_load_task(state_dict:dict)-> dict:
-    from dags.snowpark_connection import snowpark_connect
     from dags.ingest import bulk_elt
-    from dags.elt import schema1_definition, schema2_definition
+    from dags.snowpark_connection import snowpark_connect
 
     session, _ = snowpark_connect()
-    
-    download_role_ARN=state_dict['connection_parameters']['download_role_ARN']
-    download_base_url=state_dict['connection_parameters']['download_base_url']
-
-    print('Running initial bulk ingest from '+download_base_url)
-    
-    #create empty ingest tables
-    load_schema1 = schema1_definition()
-    session.create_dataframe([[None]*len(load_schema1.names)], schema=load_schema1)\
-           .na.drop()\
-           .write\
-           .save_as_table(state_dict['load_table_name']+'schema1')
-
-    load_schema2 = schema2_definition()
-    session.create_dataframe([[None]*len(load_schema2.names)], schema=load_schema2)\
-           .na.drop()\
-           .write\
-           .save_as_table(state_dict['load_table_name']+'schema2')
 
     _ = session.use_warehouse(state_dict['compute_parameters']['load_warehouse'])
 
+    print('Running initial bulk ingest from '+state_dict['connection_parameters']['download_base_url'])
+    
     _ = bulk_elt(session=session, 
                  state_dict=state_dict, 
-                 download_role_ARN=download_role_ARN,
-                 download_base_url=download_base_url)
+                 download_base_url=state_dict['connection_parameters']['download_base_url'],
+                 use_prestaged=True)
 
     #_ = session.sql('ALTER WAREHOUSE IF EXISTS '+state_dict['compute_parameters']['load_warehouse']+\
     #                ' SUSPEND').collect()

@@ -99,7 +99,7 @@ def create_forecast_table(session,
         
     weather_df = session.table(weather_view_name)
         
-    forecast_df = holiday_df.join(weather_df[['DATE','TEMP']], 'DATE', join_type='right')\
+    forecast_df = holiday_df.join(weather_df[['DATE','PRECIP','TEMP']], 'DATE', join_type='right')\
                             .na.fill({'HOLIDAY':0})\
                             .filter((F.col('DATE') >= start_date) &\
                                     (F.col('DATE') <= end_date))\
@@ -140,10 +140,11 @@ def create_feature_table(session,
                                 .count()\
                         .with_column('LAG_1', F.lag(F.col('COUNT'), offset=1).over(sid_date_window))\
                         .with_column('LAG_7', F.lag(F.col('COUNT'), offset=7).over(sid_date_window))\
+                        .with_column('LAG_90', F.lag(F.col('COUNT'), offset=90).over(sid_date_window))\
                         .with_column('LAG_365', F.lag(F.col('COUNT'), offset=365).over(sid_date_window))\
                             .na.drop()\
                         .join(holiday_df, 'DATE', join_type='left').na.fill({'HOLIDAY':0})\
-                        .join(weather_df[['DATE','TEMP']], 'DATE', 'inner')\
+                        .join(weather_df[['DATE','PRECIP','TEMP']], 'DATE', 'inner')\
                         .with_column('DAY_COUNT', F.count(F.col('DATE')).over(sid_window))\
                             .filter(F.col('DAY_COUNT') >= 365*2)\
                         .with_column('MAX_DATE', F.max('DATE').over(sid_window))\
@@ -165,7 +166,7 @@ def train_predict(session,
     cutpoint=365
     max_epochs = 10
     target_column = 'COUNT'
-    lag_values=[1,7,365]
+    lag_values=[1,7,90,365]
     lag_values_array = F.array_construct(*[F.lit(x) for x in lag_values])
     
     historical_df = session.table(feature_table_name)
@@ -232,14 +233,18 @@ def flatten_tables(session, pred_table_name:str, forecast_table_name:str, eval_t
                    F.as_integer(F.col('PRED_DATA')['COUNT']).alias('COUNT'),
                    F.as_integer(F.col('PRED_DATA')['LAG_1']).alias('LAG_1'),
                    F.as_integer(F.col('PRED_DATA')['LAG_7']).alias('LAG_7'),
+                   F.as_integer(F.col('PRED_DATA')['LAG_90']).alias('LAG_90'),
                    F.as_integer(F.col('PRED_DATA')['LAG_365']).alias('LAG_365'),
                    F.as_integer(F.col('PRED_DATA')['HOLIDAY']).alias('HOLIDAY'),
+                   F.as_decimal(F.col('PRED_DATA')['PRECIP']).alias('PRECIP'),
                    F.as_decimal(F.col('PRED_DATA')['TEMP']).alias('TEMP'),
                    F.as_decimal(F.col('PRED_DATA')['PRED']).alias('PRED'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_LAG_1']).alias('EXPL_LAG_1'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_LAG_7']).alias('EXPL_LAG_7'),
+                   F.as_decimal(F.col('PRED_DATA')['EXPL_LAG_90']).alias('EXPL_LAG_90'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_LAG_365']).alias('EXPL_LAG_365'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_HOLIDAY']).alias('EXPL_HOLIDAY'),
+                   F.as_decimal(F.col('PRED_DATA')['EXPL_PRECIP']).alias('EXPL_PRECIP'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_TEMP']).alias('EXPL_TEMP'))\
            .write.mode('overwrite').save_as_table('flat_PRED')
 
@@ -252,14 +257,18 @@ def flatten_tables(session, pred_table_name:str, forecast_table_name:str, eval_t
                    F.as_integer(F.col('PRED_DATA')['COUNT']).alias('COUNT'),
                    F.as_integer(F.col('PRED_DATA')['LAG_1']).alias('LAG_1'),
                    F.as_integer(F.col('PRED_DATA')['LAG_7']).alias('LAG_7'),
+                   F.as_integer(F.col('PRED_DATA')['LAG_90']).alias('LAG_90'),
                    F.as_integer(F.col('PRED_DATA')['LAG_365']).alias('LAG_365'),
                    F.as_integer(F.col('PRED_DATA')['HOLIDAY']).alias('HOLIDAY'),
+                   F.as_decimal(F.col('PRED_DATA')['PRECIP']).alias('PRECIP'),
                    F.as_decimal(F.col('PRED_DATA')['TEMP']).alias('TEMP'),
                    F.as_decimal(F.col('PRED_DATA')['PRED']).alias('PRED'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_LAG_1']).alias('EXPL_LAG_1'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_LAG_7']).alias('EXPL_LAG_7'),
+                   F.as_decimal(F.col('PRED_DATA')['EXPL_LAG_90']).alias('EXPL_LAG_90'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_LAG_365']).alias('EXPL_LAG_365'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_HOLIDAY']).alias('EXPL_HOLIDAY'),
+                   F.as_decimal(F.col('PRED_DATA')['EXPL_PRECIP']).alias('EXPL_PRECIP'),
                    F.as_decimal(F.col('PRED_DATA')['EXPL_TEMP']).alias('EXPL_TEMP'))\
            .write.mode('overwrite').save_as_table('flat_FORECAST')
 

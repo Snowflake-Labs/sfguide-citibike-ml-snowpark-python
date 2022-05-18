@@ -20,8 +20,8 @@ logging.getLogger().setLevel(logging.WARN)
 
 def update_forecast_table(forecast_df, stations:list, start_date, end_date):
 #     explainer_columns = [col for col in forecast_df.schema.names if 'EXP' in col]
-    explainer_columns=['EXPL_LAG_1', 'EXPL_LAG_7','EXPL_LAG_365','EXPL_HOLIDAY','EXPL_TEMP']
-    explainer_columns_new=['DAY', 'DAY_OF_WEEK', 'DAY_OF_YEAR','US_HOLIDAY', 'TEMPERATURE']
+    explainer_columns=['EXPL_LAG_1', 'EXPL_LAG_7','EXPL_LAG_90','EXPL_LAG_365','EXPL_HOLIDAY','EXPL_PRECIP','EXPL_TEMP']
+    explainer_columns_new=['DAY', 'DAY_OF_WEEK', 'QUARTER', 'DAY_OF_YEAR','US_HOLIDAY', 'PRECIPITATION','TEMPERATURE']
 
     cond = "F.when" + ".when".join(["(F.col('" + c + "') == F.col('EXPLAIN'), F.lit('" + c + "'))" for c in explainer_columns])
 
@@ -42,8 +42,10 @@ def update_forecast_table(forecast_df, stations:list, start_date, end_date):
                         F.col('EXPLAIN'), 
                         F.col('EXPL_LAG_1').alias('DAY'),
                         F.col('EXPL_LAG_7').alias('DAY_OF_WEEK'),
+                        F.col('EXPL_LAG_90').alias('QUARTER'),
                         F.col('EXPL_LAG_365').alias('DAY_OF_YEAR'),
                         F.col('EXPL_HOLIDAY').alias('US_HOLIDAY'),
+                        F.col('EXPL_PRECIP').alias('PRECIPITATION'),
                         F.col('EXPL_TEMP').alias('TEMPERATURE'),
                        )\
                 .to_pandas()
@@ -178,7 +180,7 @@ next_ingest = next_ingest.replace(day=1)
 if next_ingest <= datetime.strptime("2016-12-01", "%Y-%m-%d").date():
     download_file_name=next_ingest.strftime('%Y%m')+'-citibike-tripdata.zip'
 else:
-    download_file_name=next_ingest.strftime('%Y%m')+'-citibike-tripdata.csv.zip'
+    download_file_name=next_ingest.strftime('%Y%m')+'-citibike-tripdata.zip'
     
 run_date = next_ingest+relativedelta(months=+1)
 run_date = run_date.strftime('%Y_%m_%d')

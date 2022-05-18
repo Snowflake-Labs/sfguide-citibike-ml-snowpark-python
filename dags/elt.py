@@ -188,20 +188,21 @@ def reset_database(session, state_dict:dict, prestaged=False):
 
     if prestaged:
         sql_cmd = 'CREATE OR REPLACE STAGE '+state_dict['load_stage_name']+\
-                  ' url='+state_dict['connection_parameters']['download_base_url']+\
-                  " credentials=(aws_role='"+state_dict['connection_parameters']['download_role_ARN']+"')"
+                  ' url='+state_dict['connection_parameters']['download_base_url'] #+\
+                  #" credentials=(aws_role='"+state_dict['connection_parameters']['download_role_ARN']+"')"
         _ = session.sql(sql_cmd).collect()
     else: 
         _ = session.sql('CREATE STAGE IF NOT EXISTS '+state_dict['load_stage_name']).collect()
 
     load_schema1=schema1_definition()
-    session.createDataFrame([[None]*len(load_schema1.names)], schema=load_schema1)\
+    session.create_dataframe([[None]*len(load_schema1.names)], schema=load_schema1)\
            .na.drop()\
            .write\
-           .saveAsTable(state_dict['load_table_name']+'schema1')
+           .save_as_table(state_dict['load_table_name']+'schema1')
 
     load_schema2=schema2_definition()
-    session.createDataFrame([[None]*len(load_schema2.names)], schema=load_schema2)\
-       .na.drop()\
-       .write\
-       .saveAsTable(state_dict['load_table_name']+'schema2')
+    session.create_dataframe([[None]*len(load_schema2.names)], schema=load_schema2)\
+           .na.drop()\
+           .write\
+           .save_as_table(state_dict['load_table_name']+'schema2')
+    

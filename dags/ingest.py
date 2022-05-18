@@ -1,8 +1,8 @@
 def incremental_elt(session, 
                     state_dict:dict, 
                     files_to_ingest:list, 
-                    download_role_ARN='',
-                    download_base_url='') -> str:
+                    download_base_url,
+                    use_prestaged=False) -> str:
     
     import dags.elt as ELT
     from datetime import datetime
@@ -11,8 +11,8 @@ def incremental_elt(session,
     load_table_name=state_dict['load_table_name']
     trips_table_name=state_dict['trips_table_name']
     
-    if download_role_ARN and download_base_url:
-        print("Skipping extract.  Using provided bucket.")
+    if use_prestaged:
+        print("Skipping extract.  Using provided bucket for pre-staged files.")
         
         schema1_download_files = list()
         schema2_download_files = list()
@@ -53,9 +53,8 @@ def incremental_elt(session,
 
 def bulk_elt(session, 
              state_dict:dict,
-             download_role_ARN='', 
-             download_base_url=''
-            ) -> str:
+             download_base_url, 
+             use_prestaged=False) -> str:
     
     #import dags.elt as ELT
     from dags.ingest import incremental_elt
@@ -75,18 +74,17 @@ def bulk_elt(session,
     date_range2 = pd.period_range(start=datetime.strptime("201701", "%Y%m"), 
                                  end=datetime.strptime("201912", "%Y%m"), 
                                  freq='M').strftime("%Y%m")
-    file_name_end2 = '-citibike-tripdata.csv.zip'
-    files_to_extract = files_to_extract + [date+file_name_end2 for date in date_range2.to_list()]
-
-    if download_role_ARN and download_base_url:
-        trips_table_name = incremental_elt(session=session, 
-                                           state_dict=state_dict, 
-                                           files_to_ingest=files_to_extract, 
-                                           download_role_ARN=download_role_ARN,
-                                          download_base_url=download_base_url)
+    if use_prestaged:
+        file_name_end2 = '-citibike-tripdata.zip'
     else:
-        trips_table_name = incremental_elt(session=session, 
-                                           state_dict=state_dict, 
-                                           files_to_ingest=files_to_extract)
+        file_name_end2 = '-citibike-tripdata.csv.zip'
+    
+    files_to_extract = files_to_extract + [date+file_name_end2 for date in date_range2.to_list()]        
+
+    trips_table_name = incremental_elt(session=session, 
+                                       state_dict=state_dict, 
+                                       files_to_ingest=files_to_extract, 
+                                       use_prestaged=use_prestaged,
+                                       download_base_url=download_base_url)
     
     return trips_table_name

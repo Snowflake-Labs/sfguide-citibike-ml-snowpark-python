@@ -87,6 +87,5 @@ jupyter notebook
 
 ## TODO
 
--Update S3 bucket. s3://sfquickstarts/vhol_citibike_ml_snowpark_python/    
 -Update with public conda install of snowpark client  
 -Table functions  
