@@ -74,10 +74,8 @@ def bulk_elt(session,
     date_range2 = pd.period_range(start=datetime.strptime("201701", "%Y%m"), 
                                  end=datetime.strptime("201912", "%Y%m"), 
                                  freq='M').strftime("%Y%m")
-    if use_prestaged:
-        file_name_end2 = '-citibike-tripdata.zip'
-    else:
-        file_name_end2 = '-citibike-tripdata.csv.zip'
+    
+    file_name_end2 = '-citibike-tripdata.csv.zip'
     
     files_to_extract = files_to_extract + [date+file_name_end2 for date in date_range2.to_list()]        
 
