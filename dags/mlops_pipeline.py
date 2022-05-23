@@ -31,7 +31,7 @@ def deploy_pred_train_udf(session, udf_name:str, function_name:str, model_stage_
 
     session.clear_packages()
     session.clear_imports()
-    dep_packages=["pandas==1.3.5", "pytorch==1.10.2", "scipy==1.7.1", "scikit-learn==1.0.2", "setuptools==58.0.4"]
+    dep_packages=["pandas==1.3.5", "pytorch==1.10.2", "scipy==1.7.1", "scikit-learn==1.0.2", "setuptools==58.0.4", "cloudpickle==2.0.0"]
     dep_imports=['./include/pytorch_tabnet.zip', 'dags']
 
     station_train_predict_udf = session.udf.register(station_train_predict_func, 
@@ -59,7 +59,7 @@ def deploy_eval_udf(session, udf_name:str, function_name:str, model_stage_name:s
 
     session.clear_packages()
     session.clear_imports()
-    dep_packages=['pandas==1.3.5', 'scikit-learn==1.0.2']
+    dep_packages=['pandas==1.3.5', 'scikit-learn==1.0.2', "cloudpickle==2.0.0"]
     dep_imports=['./include/rexmex.zip', 'dags']
 
     eval_model_output_udf = session.udf.register(eval_model_func, 
