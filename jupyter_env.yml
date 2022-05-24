@@ -1,15 +1,20 @@
-name: snowpark_060
+name: snowpark_070
 channels:
   - https://repo.anaconda.com/pkgs/snowflake
 dependencies:
   - python=3.8
+  - scikit-learn==1.0.2
+  - scipy==1.7.1
+  - cloudpickle==2.0.0
+  - pytorch==1.10.2
+  - statsmodels==0.13.0
+  - matplotlib==3.5.0
+  - jupyter==1.0.0
+#  - snowflake_snowpark_python[pandas]==0.7.0
   - pip
   - pip:
     - './include/snowflake_snowpark_python-0.6.0-py3-none-any.whl[pandas]'
     - pytorch-tabnet==3.1.1
-    - matplotlib==3.5.2
-    - statsmodels==0.13.2
     - seaborn==0.11.2
     - rexmex==0.1.0
-    - jupyter==1.0.0
     - streamlit==1.8.1
