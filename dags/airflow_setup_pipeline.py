@@ -28,7 +28,7 @@ default_args = {
 #local_airflow_path = '/usr/local/airflow/'
 
 @dag(default_args=default_args, schedule_interval=None, start_date=datetime(2020, 3, 1), catchup=False, tags=['setup'])
-def citibikeml_setup_taskflow(run_date:str):
+def citibikeml_setup_taskflow_now(run_date:str):
     """
     Setup initial Snowpark / Astronomer ML Demo
     """
@@ -81,4 +81,4 @@ def citibikeml_setup_taskflow(run_date:str):
 
 run_date='2020_01_01'
 
-state_dict = citibikeml_setup_taskflow(run_date=run_date)
+state_dict = citibikeml_setup_taskflow_now(run_date=run_date)
