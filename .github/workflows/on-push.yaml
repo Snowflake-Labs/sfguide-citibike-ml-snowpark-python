@@ -1,0 +1,22 @@
+name: Astronomer CI - Deploy Code
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ## Sets Deployment API key credentials as environment variables
+  ASTRONOMER_KEY_ID: ${{ secrets.ASTRONOMER_KEY_ID }}
+  ASTRONOMER_KEY_SECRET: ${{ secrets.ASTRONOMER_KEY_SECRET }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v2.3.4
+    - name: Deploy to Astro
+      run: |
+        brew install astronomer/cloud/astrocloud
+        astrocloud deploy ${{ secrets.ASTRONOMER_DEPLOYMENT_ID }}
