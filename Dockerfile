@@ -1,4 +1,4 @@
-FROM quay.io/astronomer/astro-runtime:5.0.1
+FROM quay.io/astronomer/astro-runtime:5.0.2
 USER root
 RUN apt-get -y update && apt-get -y upgrade
 RUN apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev wget -y
