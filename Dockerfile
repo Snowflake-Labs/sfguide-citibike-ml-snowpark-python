@@ -1,7 +1,7 @@
-FROM fletchjeff/vhol-citibike:v0.1
+FROM fletchjeff/vhol-citibike-ml:v0.2
 
-# #Change this Dockerfile to the code below if you want to build your own image
-
+# Change this Dockerfile to the code below if you want to build your own image
+#
 # FROM quay.io/astronomer/astro-runtime:5.0.2
 # USER root
 # RUN apt-get -y update && apt-get -y upgrade
