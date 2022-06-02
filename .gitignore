@@ -130,3 +130,5 @@ dmypy.json
 
 
 penv/
+
+include/state.json
