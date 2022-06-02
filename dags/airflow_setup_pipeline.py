@@ -28,7 +28,7 @@ default_args = {
 #local_airflow_path = '/usr/local/airflow/'
 
 @dag(default_args=default_args, schedule_interval=None, start_date=datetime(2020, 3, 1), catchup=False, tags=['setup'])
-def citibikeml_setup_taskflow_now(run_date:str):
+def citibikeml_setup_taskflow(run_date:str):
     """
     Setup initial Snowpark / Astronomer ML Demo
     """
@@ -39,6 +39,8 @@ def citibikeml_setup_taskflow_now(run_date:str):
         state_dict = json.load(sdf)
     
     model_id = str(uuid.uuid1()).replace('-', '_')
+    
+    weather_listing_prefix = state_dict['weather_listing_prefix']
 
     state_dict.update({'model_id': model_id})
     state_dict.update({'run_date': run_date})
@@ -47,7 +49,7 @@ def citibikeml_setup_taskflow_now(run_date:str):
                        'trips_table_name': 'TRIPS',
                        'load_stage_name': 'LOAD_STAGE',
                        'model_stage_name': 'MODEL_STAGE',
-                       'weather_listing_id': 'FSA22988.WEATHERSOURCE_SNOWFLAKE_SNOWPARK_TILE_SNOWFLAKE_SECURE_SHARE_1651768630709',
+                       'weather_listing_id': f'{weather_listing_prefix}.WEATHERSOURCE_SNOWFLAKE_SNOWPARK_TILE_SNOWFLAKE_SECURE_SHARE_1651768630709',
                        'weather_table_name': state_dict['weather_database_name']+'.ONPOINT_ID.HISTORY_DAY',
                        'weather_view_name': 'WEATHER',
                        'holiday_table_name': 'HOLIDAYS',
@@ -81,4 +83,4 @@ def citibikeml_setup_taskflow_now(run_date:str):
 
 run_date='2020_01_01'
 
-state_dict = citibikeml_setup_taskflow_now(run_date=run_date)
+state_dict = citibikeml_setup_taskflow(run_date=run_date)

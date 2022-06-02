@@ -17,6 +17,8 @@ def citibikeml_monthly_taskflow(files_to_download:list, run_date:str):
         state_dict = json.load(sdf)
     
     model_id = str(uuid.uuid1()).replace('-', '_')
+    
+    weather_listing_prefix = state_dict['weather_listing_prefix']
 
     state_dict.update({'model_id': model_id})
     state_dict.update({'run_date': run_date})
@@ -25,7 +27,7 @@ def citibikeml_monthly_taskflow(files_to_download:list, run_date:str):
                        'trips_table_name': 'TRIPS',
                        'load_stage_name': 'LOAD_STAGE',
                        'model_stage_name': 'MODEL_STAGE',
-                       'weather_listing_id': 'FSA22988.WEATHERSOURCE_SNOWFLAKE_SNOWPARK_TILE_SNOWFLAKE_SECURE_SHARE_1651768630709',
+                       'weather_listing_id': f'{weather_listing_prefix}.WEATHERSOURCE_SNOWFLAKE_SNOWPARK_TILE_SNOWFLAKE_SECURE_SHARE_1651768630709',
                        'weather_table_name': state_dict['weather_database_name']+'.ONPOINT_ID.HISTORY_DAY',
                        'weather_view_name': 'WEATHER',
                        'holiday_table_name': 'HOLIDAYS',

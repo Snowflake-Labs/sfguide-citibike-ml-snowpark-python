@@ -1,7 +1,7 @@
 
 from airflow.decorators import task
 
-@task.virtualenv(python_version=3.8)
+@task()
 def snowpark_database_setup(state_dict:dict)-> dict: 
     import snowflake.snowpark.functions as F
     from dags.snowpark_connection import snowpark_connect
@@ -17,7 +17,7 @@ def snowpark_database_setup(state_dict:dict)-> dict:
 
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def incremental_elt_task(state_dict: dict, files_to_download:list)-> dict:
     from dags.ingest import incremental_elt
     from dags.snowpark_connection import snowpark_connect
@@ -41,7 +41,7 @@ def incremental_elt_task(state_dict: dict, files_to_download:list)-> dict:
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def initial_bulk_load_task(state_dict:dict)-> dict:
     from dags.ingest import bulk_elt
     from dags.snowpark_connection import snowpark_connect
@@ -63,7 +63,7 @@ def initial_bulk_load_task(state_dict:dict)-> dict:
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def materialize_holiday_task(state_dict: dict)-> dict:
     from dags.snowpark_connection import snowpark_connect
     from dags.mlops_pipeline import materialize_holiday_table
@@ -77,7 +77,7 @@ def materialize_holiday_task(state_dict: dict)-> dict:
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def subscribe_to_weather_data_task(state_dict: dict)-> dict:
     from dags.snowpark_connection import snowpark_connect
     from dags.mlops_pipeline import subscribe_to_weather_data
@@ -91,7 +91,7 @@ def subscribe_to_weather_data_task(state_dict: dict)-> dict:
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def create_weather_view_task(state_dict: dict)-> dict:
     from dags.snowpark_connection import snowpark_connect
     from dags.mlops_pipeline import create_weather_view
@@ -105,7 +105,7 @@ def create_weather_view_task(state_dict: dict)-> dict:
     session.close()
     return state_dict
     
-@task.virtualenv(python_version=3.8)
+@task()
 def deploy_model_udf_task(state_dict:dict)-> dict:
     from dags.snowpark_connection import snowpark_connect
     from dags.mlops_pipeline import deploy_pred_train_udf
@@ -122,7 +122,7 @@ def deploy_model_udf_task(state_dict:dict)-> dict:
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def deploy_eval_udf_task(state_dict:dict)-> dict:
     from dags.snowpark_connection import snowpark_connect
     from dags.mlops_pipeline import deploy_eval_udf
@@ -139,7 +139,7 @@ def deploy_eval_udf_task(state_dict:dict)-> dict:
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def generate_feature_table_task(state_dict:dict, 
                                 holiday_state_dict:dict, 
                                 weather_state_dict:dict)-> dict:
@@ -168,7 +168,7 @@ def generate_feature_table_task(state_dict:dict,
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def generate_forecast_table_task(state_dict:dict, 
                                  holiday_state_dict:dict, 
                                  weather_state_dict:dict)-> dict: 
@@ -191,7 +191,7 @@ def generate_forecast_table_task(state_dict:dict,
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def bulk_train_predict_task(state_dict:dict, 
                             feature_state_dict:dict, 
                             forecast_state_dict:dict)-> dict: 
@@ -219,7 +219,7 @@ def bulk_train_predict_task(state_dict:dict,
     session.close()
     return state_dict
 
-@task.virtualenv(python_version=3.8)
+@task()
 def eval_station_models_task(state_dict:dict, 
                              pred_state_dict:dict,
                              run_date:str)-> dict:
@@ -241,7 +241,7 @@ def eval_station_models_task(state_dict:dict,
     session.close()
     return state_dict                                               
 
-@task.virtualenv(python_version=3.8)
+@task()
 def flatten_tables_task(pred_state_dict:dict, state_dict:dict)-> dict:
     from dags.snowpark_connection import snowpark_connect
     from dags.mlops_pipeline import flatten_tables

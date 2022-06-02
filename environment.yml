@@ -10,6 +10,7 @@ dependencies:
   - statsmodels==0.13.0
   - matplotlib==3.5.0
   - ipykernel==6.13.0
+  - pandas==1.4.2
 #  - snowflake_snowpark_python[pandas]==0.7.0
   - pip
   - pip:
