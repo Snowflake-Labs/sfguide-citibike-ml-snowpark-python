@@ -15,7 +15,7 @@ RUN ./configure
 RUN make
 RUN make altinstall
 RUN ldconfig /opt/Python3.8.12
-COPY include/snowflake_snowpark_python-0.6.0-py3-none-any.whl /tmp
-RUN pip3.8 install '/tmp/snowflake_snowpark_python-0.6.0-py3-none-any.whl[pandas]'
+COPY include/snowflake_snowpark_python-0.7.0-py3-none-any.whl /tmp
+RUN pip3.8 install '/tmp/snowflake_snowpark_python-0.7.0-py3-none-any.whl[pandas]'
 USER astro
 WORKDIR /usr/local/airflow
