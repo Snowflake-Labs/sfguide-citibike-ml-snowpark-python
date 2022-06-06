@@ -10,10 +10,10 @@ dependencies:
   - statsmodels==0.13.0
   - matplotlib==3.5.0
   - jupyter==1.0.0
-#  - snowflake_snowpark_python[pandas]==0.7.0
+  - snowflake-snowpark-python==0.7.0
   - pip
   - pip:
-    - './include/snowflake_snowpark_python-0.6.0-py3-none-any.whl[pandas]'
+#    - './include/snowflake_snowpark_python-0.6.0-py3-none-any.whl[pandas]'
     - pytorch-tabnet==3.1.1
     - seaborn==0.11.2
     - rexmex==0.1.0

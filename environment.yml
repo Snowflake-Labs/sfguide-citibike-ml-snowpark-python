@@ -10,7 +10,7 @@ dependencies:
   - statsmodels==0.13.0
   - matplotlib==3.5.0
   - ipykernel==6.13.0
-#  - snowflake_snowpark_python[pandas]==0.7.0
+#  - snowflake-snowpark-python[pandas]==0.7.0
   - pip
   - pip:
     - './include/snowflake_snowpark_python-0.6.0-py3-none-any.whl[pandas]'
