@@ -1,9 +1,9 @@
-## Citibike Machine Learning Hands-on-Lab with Snowpark Python  
+# Citibike Machine Learning Hands-on-Lab with Snowpark Python  
 
-<img src="include/images/streamlit.jpg" alt="Streamlit App" width="500"/> 
 
 ## ➡️ Complete this end-to-end tutorial on [quickstarts.snowflake.com](https://quickstarts.snowflake.com/guide/machine_learning_with_snowpark_python/)
 
+<img src="include/images/streamlit.jpg" alt="Streamlit App" width="500"/> 
 
 ### Requirements:  
 - Create a [Snowflake Trial Account](https://signup.snowflake.com/)  
