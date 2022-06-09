@@ -11,7 +11,7 @@
     Note down the account identifier and region to be used in the hands-on-lab.  The account identifier and region can be found in the confirmation email from Snowflake Trial setup.  Alternatively, the account identifier can be found in the URL of the Snowflake console when logged-in.  (Example account: xxNNNNN, region: us-west-1.  
 - An [Amazon SageMaker Studio Lab Account](https://studiolab.sagemaker.aws/).  Do this ahead of time as sign-up may take up to 24 hours due to backlog.  <img src="include/images/sagemaker_studio_lab.jpg" alt="Sagemaker" width="500"/>  
   
-- Optional: Docker runtime environment such as [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [Colima](https://github.com/abiosoft/colima) will be used for running and managing Apache Airflow DAGs.  Alternatively, if you do not have Docker, you will be able to create and run the ML Ops pipeline from Python.   
+- Optional: Docker runtime environment such as [Docker Desktop](https://www.docker.com/products/docker-desktop/) will be used for running and managing Apache Airflow DAGs.  Alternatively, if you do not have Docker, you will be able to create and run the ML Ops pipeline from Python, albeit without all the benefits of Airflow.   
 <img src="include/images/apache_airflow.jpg" alt="Apache Airflow DAG" width="500"/>
   
 ### Example Use-Case
@@ -37,7 +37,7 @@ For this demo flow we will assume that the organization has the following **poli
     - Click on Start Runtime  
     - Click on Open Project  
     - Select Git -> Clone Git Repository and enter the following:  
-        Repository URL: https://github.com/Snowflake-Labs/vhol-citibike-ml-snowpark-python.  
+        Repository URL: https://github.com/Snowflake-Labs/sfguide-citibike-ml-snowpark-python.  
     - Select Yes when prompted to create a conda environment.  
     - A terminal will open and create the environment.  When it is done run `conda activate snowpark_070` in the terminal window.  
     - When opening notebooks be sure to select the "snowpark_070" kernel.  
@@ -78,9 +78,25 @@ conda install git
 ```
 mkdir ~/Desktop/snowpark-python
 cd ~/Desktop/snowpark-python
-git clone https://github.com/Snowflake-Labs/vhol-citibike-ml-snowpark-python
-cd vhol-citibike-ml-snowpark-python
+git clone https://github.com/Snowflake-Labs/sfguide-citibike-ml-snowpark-python
+cd sfguide-citibike-ml-snowpark-python
 conda env create -f jupyter_env.yml
 conda activate snowpark_070
 jupyter notebook
-```
+```  
+  
+## Automation with Airflow
+
+Running this process automatically using Apache Airflow can be done by using the Astronomer command line tools. [Astronomer](https://docs.astronomer.io/astro/cli/get-started#step-1-install-the-astro-cli) provides an easy way to deploy Apache Airflow instances in the cloud and the cli toolsets let you develop and test DAGs locally before deploying into production. 
+
+_**Note:** This will require a docker process running on the local machine, e.g. dockerd, Docker Desktop, Colima etc._
+
+* First step is to install [astrocloud CLI](https://docs.astronomer.io/astro/cli/get-started#step-1-install-the-astro-cli). 
+* Next clone the this repo locally if you have not done so already.
+* If you have been working with SageMaker, you will need to copy the final `state.json` file you created while working through the Notebooks locally. Place this file in the `include` directory and overwrite the existing file.
+* Start up the *astrocloud* instance by running `astro dev start` in the repo directory.
+* After a few mins you will have an Airflow instance running at http://localhost:8080.
+
+_**Note:** The `Dockerfile` file for this project has been modified to make things run quicker, see [the Dockerfile](Dockerfile) for details._
+
+![This is an image](include/images/apache_airflow.jpg)
