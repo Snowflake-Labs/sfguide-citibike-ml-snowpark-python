@@ -84,6 +84,21 @@ conda env create -f jupyter_env.yml
 conda activate snowpark_060
 jupyter notebook
 ```
+## Automation with Airflow
+
+To have this process running automatically using Apache Airflow can be done by using the Astronomer command line tools. [Astronomer](https://docs.astronomer.io/astro/cli/get-started#step-1-install-the-astro-cli) provides an easy way to deploy Apache Airflow instances in the cloud and the cli tool sets lets you develop and test DAGs locally before deploying into production. 
+
+_**Note:** This will require a docker process running on the local machine, e.g. dockerd, Docker Desktop, Colima etc._
+
+* First step is to install [astrocloud CLI](https://docs.astronomer.io/astro/cli/get-started#step-1-install-the-astro-cli). 
+* Next clone the this repo locally if you have not done so already.
+* If you have been working with SageMaker, you will need to copy the final `state.json` file you created while working through the Notebooks locally. Place this file in the `include` directory and overwrite the existing file.
+* Start up the *astrocloud* instance by running `astro dev start` in the repo directory.
+* After a few mins you will have an Airflow instance running at http://localhost:8080.
+
+_**Note:** The `Dockerfile` file for this project has been modified to make things run quicker, see [the Dockerfile](Dockerfile) for details._
+
+![This is an image](include/images/apache_airflow.jpg)
 
 ## TODO
 
