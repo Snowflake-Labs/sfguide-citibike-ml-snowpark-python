@@ -40,14 +40,13 @@ def citibikeml_monthly_taskflow(files_to_download:list, run_date:str):
 
     state_dict.update({'model_id': model_id})
     state_dict.update({'run_date': run_date})
-    state_dict.update({'weather_database_name': 'WEATHER'})
+    state_dict.update({'weather_database_name': 'WEATHER_NYC'})
     state_dict.update({'load_table_name': 'RAW_',
                        'trips_table_name': 'TRIPS',
                        'load_stage_name': 'LOAD_STAGE',
                        'model_stage_name': 'MODEL_STAGE',
-                       'weather_listing_id': 'zy74494.WEATHERSOURCE_SNOWFLAKE_SNOWPARK_TILE_SNOWFLAKE_SECURE_SHARE_1651768630709',
                        'weather_table_name': state_dict['weather_database_name']+'.ONPOINT_ID.HISTORY_DAY',
-                       'weather_view_name': 'WEATHER',
+                       'weather_view_name': 'WEATHER_NYC_VIEW',
                        'holiday_table_name': 'HOLIDAYS',
                        'clone_table_name': 'CLONE_'+model_id,
                        'feature_table_name' : 'FEATURE_'+model_id,
