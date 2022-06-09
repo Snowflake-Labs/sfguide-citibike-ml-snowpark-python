@@ -28,7 +28,7 @@ For this demo flow we will assume that the organization has the following **poli
   
 ### Setup Steps:
 
-- Login to your [Snowflake Trial account](https://app.snowflake.com/) with the admin credentials that were created with the account in one browser tab. Keep this tab open during the hands-on-lab.  
+- Login to your [Snowflake Trial account](https://app.snowflake.com/) with the admin credentials that were created with the account in one browser tab (a role with ORGADMIN privileges). Keep this tab open during the hands-on-lab.  
     - Click on the Billing on the left side panel. 
     - Click on [Terms and Billing](https://app.snowflake.com/terms-and-billing).
     - Read and accept terms to continue with the hands-on-lab.
@@ -81,9 +81,10 @@ cd ~/Desktop/snowpark-python
 git clone https://github.com/Snowflake-Labs/sfguide-citibike-ml-snowpark-python
 cd vhol-citibike-ml-snowpark-python
 conda env create -f jupyter_env.yml
-conda activate snowpark_060
+conda activate snowpark_070
 jupyter notebook
 ```
+
 ## Automation with Airflow
 
 To have this process running automatically using Apache Airflow can be done by using the Astronomer command line tools. [Astronomer](https://docs.astronomer.io/astro/cli/get-started#step-1-install-the-astro-cli) provides an easy way to deploy Apache Airflow instances in the cloud and the cli tool sets lets you develop and test DAGs locally before deploying into production. 
