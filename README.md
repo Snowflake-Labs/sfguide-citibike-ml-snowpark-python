@@ -1,9 +1,7 @@
-# Citibike Machine Learning Hands-on-Lab with Snowpark Python  
+## Citibike Machine Learning Hands-on-Lab with Snowpark Python  
 
+<img src="include/images/streamlit.jpg" alt="Streamlit App" width="500"/>   
 
-## ➡️ Complete this end-to-end tutorial on [quickstarts.snowflake.com](https://quickstarts.snowflake.com/guide/machine_learning_with_snowpark_python/)
-
-<img src="include/images/streamlit.jpg" alt="Streamlit App" width="500"/> 
 
 ### Requirements:  
 - Create a [Snowflake Trial Account](https://signup.snowflake.com/)  
@@ -30,7 +28,7 @@ For this demo flow we will assume that the organization has the following **poli
   
 ### Setup Steps:
 
-- Login to your [Snowflake Trial account](https://app.snowflake.com/) with the admin credentials that were created with the account in one browser tab. Keep this tab open during the hands-on-lab.  
+- Login to your [Snowflake Trial account](https://app.snowflake.com/) with the admin credentials that were created with the account in one browser tab (a role with ORGADMIN privileges). Keep this tab open during the hands-on-lab.  
     - Click on the Billing on the left side panel. 
     - Click on [Terms and Billing](https://app.snowflake.com/terms-and-billing).
     - Read and accept terms to continue with the hands-on-lab.
@@ -41,8 +39,8 @@ For this demo flow we will assume that the organization has the following **poli
     - Select Git -> Clone Git Repository and enter the following:  
         Repository URL: https://github.com/Snowflake-Labs/vhol-citibike-ml-snowpark-python.  
     - Select Yes when prompted to create a conda environment.  
-    - A terminal will open and create the environment.  When it is done run `conda activate snowpark_060` in the terminal window.  
-    - When opening notebooks be sure to select the "snowpark_060" kernel.  
+    - A terminal will open and create the environment.  When it is done run `conda activate snowpark_070` in the terminal window.  
+    - When opening notebooks be sure to select the "snowpark_070" kernel.  
 
 ### Alternative Client  
 
@@ -83,11 +81,6 @@ cd ~/Desktop/snowpark-python
 git clone https://github.com/Snowflake-Labs/vhol-citibike-ml-snowpark-python
 cd vhol-citibike-ml-snowpark-python
 conda env create -f jupyter_env.yml
-conda activate snowpark_060
+conda activate snowpark_070
 jupyter notebook
 ```
-
-## TODO
-
--Update with public conda install of snowpark client  
--Table functions  
