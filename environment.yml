@@ -1,5 +1,6 @@
 name: snowpark_070
 channels:
+  - https://repo.anaconda.com/pkgs/main
   - https://repo.anaconda.com/pkgs/snowflake/
 dependencies:
   - python=3.8
