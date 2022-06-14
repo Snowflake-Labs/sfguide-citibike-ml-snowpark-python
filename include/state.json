@@ -1,0 +1,12 @@
+{
+    "connection_parameters": {"user": "<USERNAME>",
+                              "account": "<ACCOUNTNAME>.<DOMAIN>",
+                              "role": "ACCOUNTADMIN"
+                             },
+    "compute_parameters" : {"default_warehouse": "XSMALL_WH",  
+                            "task_warehouse": "XSMALL_WH",  
+                            "load_warehouse": "LARGE_WH",  
+                            "fe_warehouse": "XXLARGE_WH",  
+                            "train_warehouse": "XXLARGE_WH"  
+                            }
+}
