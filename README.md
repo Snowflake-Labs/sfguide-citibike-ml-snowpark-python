@@ -44,7 +44,10 @@ For this demo flow we will assume that the organization has the following **poli
 
 ### Alternative Client  
 
-As an alternative to SageMaker Studio Lab this hands-on-lab can be run in Jupyter or any other notebook from a local system or anywhere a python 3.8 kernel can be installed.  
+As an alternative to SageMaker Studio Lab this hands-on-lab can be run in Jupyter or any other notebook from a local system or anywhere a python 3.8 kernel can be installed. 
+
+_**Note:** The `astro` cli setup as part of this repo can also run a version of Jupyter Lab on your local system, which might be quicker if you don't want to go through the conda install listed below. To use this include version of Jupyter, rename the `docker-compose.override.yml.TEMP` file to `docker-compose.override.yml` before running the `astro dev start` command detailed in the Airflow section below_
+
 - Install Miniconda
     - For MacOS Intel Chip run:  
     ```bash
@@ -91,11 +94,12 @@ Running this process automatically using Apache Airflow can be done by using the
 
 _**Note:** This will require a docker process running on the local machine, e.g. dockerd, Docker Desktop, Colima etc._
 
-* First step is to install [astrocloud CLI](https://docs.astronomer.io/astro/cli/get-started#step-1-install-the-astro-cli). 
+* First step is to install [astro CLI](https://docs.astronomer.io/astro/cli/get-started#step-1-install-the-astro-cli). 
 * Next clone the this repo locally if you have not done so already.
 * If you have been working with SageMaker, you will need to copy the final `state.json` file you created while working through the Notebooks locally. Place this file in the `include` directory and overwrite the existing file.
-* Start up the *astrocloud* instance by running `astro dev start` in the repo directory.
-* After a few mins you will have an Airflow instance running at http://localhost:8080.
+* If you want to use a local instance of Jupyter, simple rename the file `docker-compose.override.yml.TEMP` to `docker-compose.override.yml` before moving to the next step.
+* Start up the *astro* instance by running `astro dev start` in the repo directory.
+* After a few mins you will have an Airflow instance running at http://localhost:8080. If you renamed the `docker-compose.override.yml.TEMP` to `docker-compose.override.yml` you will also have a version of Jupyter running at http://localhost:8888
 
 _**Note:** The `Dockerfile` file for this project has been modified to make things run quicker, see [the Dockerfile](Dockerfile) for details._
 
