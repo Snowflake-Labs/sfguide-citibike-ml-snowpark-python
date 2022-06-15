@@ -1,0 +1,11 @@
+version: '2'
+services:
+  jupyter:
+    image: fletchjeff/vhol-citibike:v0.4
+    networks:
+      - airflow
+    volumes:
+      - ${PWD}:/code/
+    ports:
+      - 8888:8888
+    command: bash -c "source /etc/bash.bashrc && jupyter notebook --notebook-dir=/code --ip 0.0.0.0 --no-browser --allow-root --NotebookApp.token=''"
