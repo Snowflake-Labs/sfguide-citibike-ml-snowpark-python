@@ -1,7 +1,7 @@
 version: '2'
 services:
   jupyter:
-    image: fletchjeff/vhol-citibike:v0.3
+    image: fletchjeff/vhol-citibike:v0.4
     networks:
       - airflow
     volumes:
