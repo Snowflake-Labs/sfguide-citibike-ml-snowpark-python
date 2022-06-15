@@ -46,7 +46,7 @@ def citibikeml_monthly_taskflow(files_to_download:list, run_date:str):
                        'load_stage_name': 'LOAD_STAGE',
                        'model_stage_name': 'MODEL_STAGE',
                        'weather_table_name': state_dict['weather_database_name']+'.ONPOINT_ID.HISTORY_DAY',
-                       'weather_view_name': 'WEATHER_NYC_VIEW',
+                       'weather_view_name': 'WEATHER_NYC_VW',
                        'holiday_table_name': 'HOLIDAYS',
                        'clone_table_name': 'CLONE_'+model_id,
                        'feature_table_name' : 'FEATURE_'+model_id,
