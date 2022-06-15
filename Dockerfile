@@ -2,7 +2,7 @@
 # prebuilt image available to make this process go faster. To use the standard 
 # build process, comment the line below and uncomment the rest of the document.
 
-FROM fletchjeff/vhol-citibike:v0.4
+FROM fletchjeff/vhol-citibike:v0.3
 
 # FROM quay.io/astronomer/astro-runtime:5.0.2
 # USER root
