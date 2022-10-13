@@ -17,7 +17,7 @@ def generate_holiday_df(session, holiday_table_name:str):
     session.create_dataframe(holiday_df) \
            .with_column("HOLIDAY", F.lit(1))\
            .write\
-           .save_as_table(holiday_table_name, mode="overwrite", create_temp_table=True)
+           .save_as_table(holiday_table_name, mode="overwrite", table_type="temporary")
     
     return session.table(holiday_table_name)
 

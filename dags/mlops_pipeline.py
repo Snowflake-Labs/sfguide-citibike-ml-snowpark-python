@@ -26,31 +26,42 @@ def create_weather_view(session, weather_table_name:str, weather_view_name:str) 
     return weather_view_name
 
 def deploy_pred_train_udf(session, udf_name:str, function_name:str, model_stage_name:str) -> str:
-    from dags.station_train_predict import station_train_predict_func
+    from dags.station_train_predict import StationTrainPredictFunc
     from snowflake.snowpark import types as T
+    from snowflake.snowpark.functions import udtf
 
     session.clear_packages()
     session.clear_imports()
     dep_packages=["pandas==1.3.5", "pytorch==1.10.2", "scipy==1.7.1", "scikit-learn==1.0.2", "setuptools==58.0.4", "cloudpickle==2.0.0"]
     dep_imports=['./include/pytorch_tabnet.zip', 'dags']
 
-    station_train_predict_udf = session.udf.register(station_train_predict_func, 
-                                                     name=udf_name,
+    station_train_predict_udtf = udtf(StationTrainPredictFunc,
+                                                      session=session,
+                                                     name="station_train_predict_udtf",
                                                      is_permanent=True,
                                                      stage_location='@'+str(model_stage_name), 
                                                      imports=dep_imports,
                                                      packages=dep_packages,
-                                                     input_types=[T.ArrayType(), 
+                                                     input_types=[T.DateType(), 
+                                                                  T.FloatType(), 
+                                                                  T.FloatType(),
+                                                                  T.FloatType(),
+                                                                  T.FloatType(),
+                                                                  T.FloatType(),
+                                                                  T.FloatType(),
+                                                                  T.FloatType(),
+                                                                  T.FloatType(),
+                                                                  T.ArrayType(),
+                                                                  T.StringType(),
+                                                                  T.FloatType(), 
+                                                                  T.FloatType(), 
                                                                   T.ArrayType(), 
-                                                                  T.StringType(), 
-                                                                  T.IntegerType(), 
-                                                                  T.IntegerType(), 
-                                                                  T.ArrayType(), 
-                                                                  T.ArrayType(), 
+                                                                  T.ArrayType(),
                                                                   T.ArrayType()],
-                                                     return_type=T.VariantType(),
+                                                     output_schema=T.StructType([T.StructField("PRED_DATA", T.VariantType())]),
                                                      replace=True)
-    return station_train_predict_udf.name
+    
+    return station_train_predict_udtf.name
 
 
 def deploy_eval_udf(session, udf_name:str, function_name:str, model_stage_name:str) -> str:
@@ -174,27 +185,38 @@ def train_predict(session,
     historical_column_list.remove('STATION_ID')
     historical_column_names = F.array_construct(*[F.lit(x) for x in historical_column_list])
 
-    historical_df = historical_df.group_by(F.col('STATION_ID'))\
-                                 .agg(F.array_agg(F.array_construct(*historical_column_list))\
-                                      .alias('HISTORICAL_DATA'))
-
     forecast_df = session.table(forecast_table_name)
-    forecast_column_names = F.array_construct(*[F.lit(x) for x in forecast_df.columns])
+    forecast_column_list = forecast_df.columns
     forecast_df = forecast_df.select(F.array_agg(F.array_construct(F.col('*'))).alias('FORECAST_DATA'))
+    
+    train_df = historical_df.join(forecast_df)
+    train_df.write.mode('overwrite').save_as_table('udtf_input', table_type='temporary')
+    
+    sql_txt = "with input as ( \
+                select * from udtf_input \
+                ) \
+            select res.*, station_id from input, \
+            table(station_train_predict_udtf(input.DATE, to_double(input.COUNT), \
+                                            to_double(input.LAG_1), \
+                                            to_double(input.LAG_7), \
+                                            to_double(input.LAG_90), \
+                                            to_double(input.LAG_365), \
+                                            to_double(input.HOLIDAY), \
+                                            to_double(input.PRECIP), \
+                                            to_double(input.TEMP), \
+                                            {}, \
+                                            '{}', \
+                                            to_double({}), \
+                                            to_double({}), \
+                                            {}, \
+                                            input.FORECAST_DATA, \
+                                            {}) \
+            over (partition by STATION_ID)) res".format(historical_column_list, target_column, cutpoint, max_epochs, forecast_column_list, lag_values)
+    
+    pred_df = session.sql(sql_txt)
 
-    pred_df = historical_df.join(forecast_df)\
-                           .select(F.col('STATION_ID'),
-                         F.call_udf(station_train_pred_udf_name, 
-                                    F.col('HISTORICAL_DATA'),
-                                    F.lit(historical_column_names), 
-                                    F.lit(target_column),
-                                    F.lit(cutpoint), 
-                                    F.lit(max_epochs),
-                                    F.col('FORECAST_DATA'),
-                                    F.lit(forecast_column_names),
-                                    F.lit(lag_values_array)).alias('PRED_DATA'))\
-                 .write.mode('overwrite')\
-                 .save_as_table(pred_table_name)
+    pred_df.write.mode('overwrite')\
+            .save_as_table(pred_table_name)
 
     return pred_table_name
 
