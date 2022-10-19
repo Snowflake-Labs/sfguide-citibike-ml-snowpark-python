@@ -74,7 +74,7 @@ class StationTrainPredictFunc:
             num_workers=0,
             drop_last=True)
 
-        df['PRED'] = model.predict(tensor(df[feature_columns].values))
+        df['PRED'] = model.predict(tensor(df[feature_columns].values.astype(np.float32)))
         
         if len(self.lag_values) > 0:
             forecast_df = pd.DataFrame(self.forecast_data, columns = self.forecast_column_names)
