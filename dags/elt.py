@@ -188,8 +188,7 @@ def reset_database(session, state_dict:dict, prestaged=False):
 
     if prestaged:
         sql_cmd = 'CREATE OR REPLACE STAGE '+state_dict['load_stage_name']+\
-                  ' url='+state_dict['connection_parameters']['download_base_url'] #+\
-                  #" credentials=(aws_role='"+state_dict['connection_parameters']['download_role_ARN']+"')"
+                  ' url='+state_dict['connection_parameters']['download_base_url']
         _ = session.sql(sql_cmd).collect()
     else: 
         _ = session.sql('CREATE STAGE IF NOT EXISTS '+state_dict['load_stage_name']).collect()

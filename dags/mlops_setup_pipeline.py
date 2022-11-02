@@ -39,8 +39,8 @@ def citibikeml_setup_taskflow(run_date:str):
                        'eval_table_name': 'EVAL_'+model_id,
                        'forecast_table_name': 'FORECAST_'+model_id,
                        'forecast_steps': 30,
-                       'train_udf_name': 'station_train_predict_udf',
-                       'train_func_name': 'station_train_predict_func',
+                       'train_udf_name': 'station_train_predict_udtf',
+                       'train_func_name': 'StationTrainPredictFunc',
                        'eval_udf_name': 'eval_model_output_udf',
                        'eval_func_name': 'eval_model_func'
                       })
